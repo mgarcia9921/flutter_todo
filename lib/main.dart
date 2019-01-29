@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo/pages/safe/safe.dart';
 
 import 'package:scoped_model/scoped_model.dart';
 
@@ -61,7 +62,8 @@ class _TodoAppState extends State<TodoApp> {
         ),
         routes: {
           '/': (BuildContext context) =>
-              _isAuthenticated ? TodoListPage(_model) : AuthPage(),
+             // _isAuthenticated ? TodoListPage(_model) : AuthPage(),
+              _isAuthenticated ? SafeEditorPage(_model) : AuthPage(),
           '/editor': (BuildContext context) =>
               _isAuthenticated ? TodoEditorPage() : AuthPage(),
           '/register': (BuildContext context) =>

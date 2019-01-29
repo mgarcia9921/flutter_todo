@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo/models/safe/Safe.dart';
 
 import 'package:scoped_model/scoped_model.dart';
 
 import 'package:flutter_todo/.env.dart';
 import 'package:flutter_todo/models/todo.dart';
+import 'package:flutter_todo/models/safe/enum/AccessLevel.dart';
 import 'package:flutter_todo/models/priority.dart';
 import 'package:flutter_todo/scoped_models/app_model.dart';
 import 'package:flutter_todo/widgets/helpers/message_dialog.dart';
@@ -13,6 +15,11 @@ import 'package:flutter_todo/widgets/form_fields/priority_form_field.dart';
 import 'package:flutter_todo/widgets/form_fields/toggle_form_field.dart';
 
 class SafeEditorPage extends StatefulWidget {
+
+  final AppModel model;
+
+  SafeEditorPage(this.model);
+
   @override
   State<StatefulWidget> createState() {
     return _SafeEditorPageState();
@@ -21,10 +28,9 @@ class SafeEditorPage extends StatefulWidget {
 
 class _SafeEditorPageState extends State<SafeEditorPage> {
   final Map<String, dynamic> _formData = {
-    'title': null,
-    'content': null,
-    'priority': Priority.Low,
-    'isDone': false
+    'name': null,
+    'type': AccessLevel.Private.toString(),
+
   };
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -59,13 +65,10 @@ class _SafeEditorPageState extends State<SafeEditorPage> {
 
         _formKey.currentState.save();
 
-        if (model.currentTodo != null && model.currentTodo.id != null) {
+        if (model.currentSafe != null ) {
           model
-              .updateTodo(
-            _formData['title'],
-            _formData['content'],
-            _formData['priority'],
-            _formData['isDone'],
+              .updateSafe(
+
           )
               .then((bool success) {
             if (success) {
@@ -78,11 +81,11 @@ class _SafeEditorPageState extends State<SafeEditorPage> {
           });
         } else {
           model
-              .createTodo(
-            _formData['title'],
-            _formData['content'],
-            _formData['priority'],
-            _formData['isDone'],
+              .createSafe(
+//            _formData['title'],
+//            _formData['content'],
+//            _formData['priority'],
+//            _formData['isDone'],
           )
               .then((bool success) {
             if (success) {
@@ -96,28 +99,28 @@ class _SafeEditorPageState extends State<SafeEditorPage> {
     );
   }
 
-  Widget _buildTitleField(Todo todo) {
+  Widget _buildTitleField(Safe safe) {
     return TextFormField(
       decoration: InputDecoration(labelText: 'Title'),
-      initialValue: todo != null ? todo.title : '',
+      initialValue: safe != null ? safe.name : '',
       validator: (value) {
         if (value.isEmpty) {
-          return 'Please enter todo\'s title';
+          return 'Please enter a safe name\'s title';
         }
       },
       onSaved: (value) {
-        _formData['title'] = value;
+        _formData['name'] = value;
       },
     );
   }
 
-  Widget _buildContentField(Todo todo) {
+  Widget _buildContentField(Safe safe) {
     return TextFormField(
-      decoration: InputDecoration(labelText: 'Content'),
-      initialValue: todo != null ? todo.content : '',
+      decoration: InputDecoration(labelText: 'Type'),
+      initialValue: safe != null ? safe.type : '',
       maxLines: 5,
       onSaved: (value) {
-        _formData['content'] = value;
+        _formData['type'] = value;
       },
     );
   }
@@ -146,23 +149,21 @@ class _SafeEditorPageState extends State<SafeEditorPage> {
   }
 
   Widget _buildForm(AppModel model) {
-    Todo todo = model.currentTodo;
+    Safe safe = model.currentSafe;
 
-    _formData['title'] = todo != null ? todo.title : null;
-    _formData['content'] = todo != null ? todo.content : null;
-    _formData['priority'] = todo != null ? todo.priority : Priority.Low;
-    _formData['isDone'] = todo != null ? todo.isDone : false;
+    _formData['title'] = safe != null ? safe.name : null;
+    _formData['type'] = safe != null ? safe.type : null;
 
     return Form(
       key: _formKey,
       child: ListView(
         children: <Widget>[
-          _buildTitleField(todo),
-          _buildContentField(todo),
+          _buildTitleField(safe),
+          _buildContentField(safe),
           SizedBox(
             height: 12.0,
           ),
-          _buildOthers(todo),
+         // _buildOthers(todo),
         ],
       ),
     );

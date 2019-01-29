@@ -1,0 +1,4 @@
+enum AccessLevel {
+  Share,
+  Private,
+}

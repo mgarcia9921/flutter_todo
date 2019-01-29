@@ -63,45 +63,47 @@ mixin TodosModel on CoreModel {
     _isLoading = true;
     notifyListeners();
 
-    try {
-      final http.Response response = await http.get(
-          '${Configure.FirebaseUrl}/todos.json?auth=${_user.token}&orderBy="userId"&equalTo="${_user.id}"');
-
-      if (response.statusCode != 200 && response.statusCode != 201) {
-        _isLoading = false;
-        notifyListeners();
-
-        return;
-      }
-
-      final Map<String, dynamic> todoListData = json.decode(response.body);
-
-      if (todoListData == null) {
-        _isLoading = false;
-        notifyListeners();
-
-        return;
-      }
-
-      todoListData.forEach((String todoId, dynamic todoData) {
-        final Todo todo = Todo(
-          id: todoId,
-          title: todoData['title'],
-          content: todoData['content'],
-          priority: PriorityHelper.toPriority(todoData['priority']),
-          isDone: todoData['isDone'],
-          userId: _user.id,
-        );
-
-        _todos.add(todo);
-      });
+//    try {
+//      final http.Response response = await http.get(
+//          '${Configure.FirebaseUrl}/todos.json?auth=${_user.token}&orderBy="userId"&equalTo=id1');
+//
+//      //'${Configure.FirebaseUrl}/todos.json?auth=${_user.token}&orderBy="userId"&equalTo="${_user.id}"');
+//
+//      if (response.statusCode != 200 && response.statusCode != 201) {
+//        _isLoading = false;
+//        notifyListeners();
+//
+//        return;
+//      }
+//
+//      final Map<String, dynamic> todoListData = json.decode(response.body);
+//
+//      if (todoListData == null) {
+//        _isLoading = false;
+//        notifyListeners();
+//
+//        return;
+//      }
+//
+//      todoListData.forEach((String todoId, dynamic todoData) {
+//        final Todo todo = Todo(
+//          id: todoId,
+//          title: todoData['title'],
+//          content: todoData['content'],
+//          priority: PriorityHelper.toPriority(todoData['priority']),
+//          isDone: todoData['isDone'],
+//          userId: _user.id,
+//        );
+//
+//        _todos.add(todo);
+//      });
 
       _isLoading = false;
       notifyListeners();
-    } catch (error) {
-      _isLoading = false;
-      notifyListeners();
-    }
+//    } catch (error) {
+//      _isLoading = false;
+//      notifyListeners();
+//    }
   }
 
   Future<bool> createTodo(
@@ -114,31 +116,35 @@ mixin TodosModel on CoreModel {
       'content': content,
       'priority': priority.toString(),
       'isDone': isDone,
-      'userId': _user.id,
+      //'userId': _user.id,
+      'userId': "id1",
+
     };
 
-    try {
-      final http.Response response = await http.post(
-        '${Configure.FirebaseUrl}/todos.json?auth=${_user.token}',
-        body: json.encode(formData),
-      );
-
-      if (response.statusCode != 200 && response.statusCode != 201) {
-        _isLoading = false;
-        notifyListeners();
-
-        return false;
-      }
-
-      final Map<String, dynamic> responseData = json.decode(response.body);
+//    try {
+//      final http.Response response = await http.post(
+//        '${Configure.FirebaseUrl}/todos.json?auth=${_user.token}',
+//        body: json.encode(formData),
+//      );
+//
+//      if (response.statusCode != 200 && response.statusCode != 201) {
+//        _isLoading = false;
+//        notifyListeners();
+//
+//        return false;
+//      }
+//
+//      final Map<String, dynamic> responseData = json.decode(response.body);
 
       Todo todo = Todo(
-        id: responseData['name'],
+        //id: responseData['name'],
+        id: "1",
         title: title,
         content: content,
         priority: priority,
         isDone: isDone,
-        userId: _user.id,
+        //userId: _user.id,
+        userId: 'us1',
       );
       _todos.add(todo);
 
@@ -146,12 +152,12 @@ mixin TodosModel on CoreModel {
       notifyListeners();
 
       return true;
-    } catch (error) {
-      _isLoading = false;
-      notifyListeners();
-
-      return false;
-    }
+//    } catch (error) {
+//      _isLoading = false;
+//      notifyListeners();
+//
+//      return false;
+//    }
   }
 
   Future<bool> updateTodo(
@@ -159,81 +165,84 @@ mixin TodosModel on CoreModel {
     _isLoading = true;
     notifyListeners();
 
-    final Map<String, dynamic> formData = {
-      'title': title,
-      'content': content,
-      'priority': priority.toString(),
-      'isDone': isDone,
-      'userId': _user.id,
-    };
-
-    try {
-      final http.Response response = await http.put(
-        '${Configure.FirebaseUrl}/todos/${currentTodo.id}.json?auth=${_user.token}',
-        body: json.encode(formData),
-      );
-
-      if (response.statusCode != 200 && response.statusCode != 201) {
-        _isLoading = false;
-        notifyListeners();
-
-        return false;
-      }
+//    final Map<String, dynamic> formData = {
+//      'title': title,
+//      'content': content,
+//      'priority': priority.toString(),
+//      'isDone': isDone,
+//      'userId': _user.id,
+//    };
+//
+//    try {
+//      final http.Response response = await http.put(
+//        '${Configure.FirebaseUrl}/todos/${currentTodo.id}.json?auth=${_user.token}',
+//        body: json.encode(formData),
+//      );
+//
+//      if (response.statusCode != 200 && response.statusCode != 201) {
+//        _isLoading = false;
+//        notifyListeners();
+//
+//        return false;
+//      }
 
       Todo todo = Todo(
-        id: currentTodo.id,
+        //id: currentTodo.id,
+        id: '1',
         title: title,
         content: content,
         priority: priority,
         isDone: isDone,
-        userId: _user.id,
+        //userId: _user.id,
+        userId: 'u1',
       );
-      int todoIndex = _todos.indexWhere((t) => t.id == currentTodo.id);
+      //int todoIndex = _todos.indexWhere((t) => t.id == currentTodo.id);
+      int todoIndex = _todos.indexWhere((t) => t.id == '1');
       _todos[todoIndex] = todo;
 
       _isLoading = false;
       notifyListeners();
 
       return true;
-    } catch (error) {
-      _isLoading = false;
-      notifyListeners();
-
-      return false;
-    }
+//    } catch (error) {
+//      _isLoading = false;
+//      notifyListeners();
+//
+//      return false;
+//    }
   }
 
   Future<bool> removeTodo(String id) async {
     _isLoading = true;
     notifyListeners();
 
-    try {
-      Todo todo = _todos.firstWhere((t) => t.id == id);
+  //  try {
+    //  Todo todo = _todos.firstWhere((t) => t.id == id);
       int todoIndex = _todos.indexWhere((t) => t.id == id);
       _todos.removeAt(todoIndex);
 
-      final http.Response response = await http.delete(
-          '${Configure.FirebaseUrl}/todos/$id.json?auth=${_user.token}');
-
-      if (response.statusCode != 200 && response.statusCode != 201) {
-        _todos[todoIndex] = todo;
-
-        _isLoading = false;
-        notifyListeners();
-
-        return false;
-      }
+//      final http.Response response = await http.delete(
+//          '${Configure.FirebaseUrl}/todos/$id.json?auth=${_user.token}');
+//
+//      if (response.statusCode != 200 && response.statusCode != 201) {
+//        _todos[todoIndex] = todo;
+//
+//        _isLoading = false;
+//        notifyListeners();
+//
+//        return false;
+//      }
 
       _isLoading = false;
       notifyListeners();
 
       return true;
-    } catch (error) {
-      _isLoading = false;
-      notifyListeners();
-
-      return false;
-    }
+//    } catch (error) {
+//      _isLoading = false;
+//      notifyListeners();
+//
+//      return false;
+//    }
   }
 
   Future<bool> toggleDone(String id) async {
@@ -247,21 +256,22 @@ mixin TodosModel on CoreModel {
       'content': todo.content,
       'priority': todo.priority.toString(),
       'isDone': !todo.isDone,
-      'userId': _user.id,
+      //'userId': _user.id,
+      'userId': todo.userId,
     };
 
-    try {
-      final http.Response response = await http.put(
-        '${Configure.FirebaseUrl}/todos/$id.json?auth=${_user.token}',
-        body: json.encode(formData),
-      );
+//    try {
+//      final http.Response response = await http.put(
+//        '${Configure.FirebaseUrl}/todos/$id.json?auth=${_user.token}',
+//        body: json.encode(formData),
+//      );
 
-      if (response.statusCode != 200 && response.statusCode != 201) {
-        _isLoading = false;
-        notifyListeners();
-
-        return false;
-      }
+//      if (response.statusCode != 200 && response.statusCode != 201) {
+//        _isLoading = false;
+//        notifyListeners();
+//
+//        return false;
+//      }
 
       todo = Todo(
         id: todo.id,
@@ -269,7 +279,8 @@ mixin TodosModel on CoreModel {
         content: todo.content,
         priority: todo.priority,
         isDone: !todo.isDone,
-        userId: _user.id,
+        //userId: _user.id,
+        userId: todo.userId,
       );
       int todoIndex = _todos.indexWhere((t) => t.id == id);
       _todos[todoIndex] = todo;
@@ -278,12 +289,12 @@ mixin TodosModel on CoreModel {
       notifyListeners();
 
       return true;
-    } catch (error) {
-      _isLoading = false;
-      notifyListeners();
-
-      return false;
-    }
+//    } catch (error) {
+//      _isLoading = false;
+//      notifyListeners();
+//
+//      return false;
+//    }
   }
 }
 
@@ -309,6 +320,10 @@ mixin UserModel on CoreModel {
       'password': password,
       'returnSecureToken': true,
     };
+
+    if(email != null){
+      return {'success': true};
+    }
 
     try {
       final http.Response response = await http.post(

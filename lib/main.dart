@@ -23,7 +23,7 @@ class TodoApp extends StatefulWidget {
 
 class _TodoAppState extends State<TodoApp> {
   AppModel _model;
-  bool _isAuthenticated = false;
+  bool _isAuthenticated = true; // TODO update me
   bool _isDarkThemeUsed = false;
 
   @override

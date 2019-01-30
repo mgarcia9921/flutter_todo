@@ -12,12 +12,24 @@ mixin SafeCoreModel on Model {
 mixin SafeModel on SafeCoreModel {
   Safe _safe;
 
+  List<Safe> get safes {
+    return List.from(_safes);
+  }
+
   bool get isLoading {
     return _isLoading;
   }
 
+  bool get isSafeEmpty {
+    return _safes.isEmpty;
+  }
+
   Safe get currentSafe {
     return _safe;
+  }
+
+  void setCurrentSafe(Safe safe) {
+    _safe = safe;
   }
 
   Future<bool> fetchSafes() async {
@@ -43,6 +55,20 @@ mixin SafeModel on SafeCoreModel {
     );
     int safeIndex = _safes.indexWhere((t) => t.id == '1');
     _safes[safeIndex] = safe;
+
+    _isLoading = false;
+    notifyListeners();
+
+    return true;
+  }
+
+
+  Future<bool> removeSafe(Safe safe) async {
+    _isLoading = true;
+    notifyListeners();
+
+    int index = _safes.indexWhere((t) => t.id == safe.id);
+    _safes.removeAt(index);
 
     _isLoading = false;
     notifyListeners();
